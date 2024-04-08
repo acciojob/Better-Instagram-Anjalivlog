@@ -41,7 +41,7 @@ function handleDrop(e) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    var images = document.querySelectorAll('.image');
+    var images = document.querySelectorAll('#drag1, #drag2, #drag3, #drage4, #drag5, #drag6');
 
     images.forEach(image => {
         image.addEventListener('dragstart', handleDragStart);
