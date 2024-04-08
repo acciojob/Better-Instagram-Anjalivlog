@@ -41,7 +41,7 @@ function handleDrop(e) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    var images = document.querySelectorAll('#drag1, #drag2, #drag3, #drage4, #drag5, #drag6');
+    var images = document.querySelectorAll('.image');
 
     images.forEach(image => {
         image.addEventListener('dragstart', handleDragStart);
@@ -49,3 +49,10 @@ document.addEventListener('DOMContentLoaded', function () {
         image.addEventListener('drop', handleDrop);
     });
 });
+
+// Export the functions to be used in Cypress tests
+module.exports = {
+    handleDragStart,
+    handleDragOver,
+    handleDrop
+};
