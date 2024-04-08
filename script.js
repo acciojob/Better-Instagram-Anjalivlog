@@ -1,28 +1,51 @@
 //your code here
-let draggedImage = null;
+var dragImage = null;
 
-function onDragStart(event) {
-  draggedImage = event.target.closest('.image');
+function handleDragStart(e) {
+    dragImage = this;
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/html', this.outerHTML);
 }
 
-function onDragOver(event) {
-  event.preventDefault();
+function handleDragOver(e) {
+    if (e.preventDefault) {
+        e.preventDefault();
+    }
+    e.dataTransfer.dropEffect = 'move';
+    return false;
 }
 
-function onDrop(event) {
-  let targetImage = event.target.closest('.image');
-  if (targetImage && targetImage !== draggedImage) {
-    let tempBackgroundImage = targetImage.style.backgroundImage;
-    targetImage.style.backgroundImage = draggedImage.style.backgroundImage;
-    draggedImage.style.backgroundImage = tempBackgroundImage;
-  }
-  draggedImage = null;
+function handleDrop(e) {
+    if (e.stopPropagation) {
+        e.stopPropagation();
+    }
+
+    if (dragImage !== this) {
+        var sourceIndex = Array.from(dragImage.parentNode.children).indexOf(dragImage);
+        var targetIndex = Array.from(this.parentNode.children).indexOf(this);
+
+        var images = document.querySelectorAll('.image');
+        var tempHTML = this.outerHTML;
+        this.outerHTML = dragImage.outerHTML;
+        dragImage.outerHTML = tempHTML;
+
+        // Re-attach drag and drop event listeners to the new elements
+        images.forEach(image => {
+            image.addEventListener('dragstart', handleDragStart);
+            image.addEventListener('dragover', handleDragOver);
+            image.addEventListener('drop', handleDrop);
+        });
+    }
+
+    return false;
 }
 
-// Add event listeners to the images
-let images = document.querySelectorAll('.image');
-for (let i = 0; i < images.length; i++) {
-  images[i].addEventListener('dragstart', onDragStart, false);
-  images[i].addEventListener('dragover', onDragOver, false);
-  images[i].addEventListener('drop', onDrop, false);
-}
+document.addEventListener('DOMContentLoaded', function () {
+    var images = document.querySelectorAll('.image');
+
+    images.forEach(image => {
+        image.addEventListener('dragstart', handleDragStart);
+        image.addEventListener('dragover', handleDragOver);
+        image.addEventListener('drop', handleDrop);
+    });
+});
